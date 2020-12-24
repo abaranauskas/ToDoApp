@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using TasksManagementApp.Utils;
 
 namespace ToDoApp.Tasks
 {
-    public class TasksController
+    [ApiController]
+    [Route("[controller]")]
+    public class TasksController: ControllerBase
     {
+        private readonly UnitOfWork _unitOfWork;
 
+        public TasksController(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
     }
 }

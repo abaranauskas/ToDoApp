@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace ToDoApp.Domain.Users
+namespace TasksManagementApp.Domain.Users
 {
     public class Role : ValueObject
     {
-        public static Role User = new Role("User");
-        public static Role Admin = new Role("Admin");
+        public Role()
+        {
+        }
+
+        public static Role User = new Role("user");
+        public static Role Admin = new Role("admin");
 
         public string Value { get; }
 
@@ -22,6 +26,11 @@ namespace ToDoApp.Domain.Users
         public static implicit operator string(Role role)
         {
             return role.Value;
+        }
+
+        public static explicit operator Role(string role)
+        {
+            return new Role(role);
         }
     }
 }

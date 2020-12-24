@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ToDoApp.Domain.Users
+namespace TasksManagementApp.Domain.Users
 {
     public class Email : ValueObject
     {
+        protected Email()
+        {
+        }
+
         public string Value { get; }
 
         private Email(string value)

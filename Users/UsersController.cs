@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TasksManagementApp.Utils;
 
-namespace ToDoApp.Users
+namespace TasksManagementApp.Users
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController: ControllerBase
+    public class UsersController : ControllerBase
     {
-        
+        private readonly UnitOfWork _unitOfWork;
+
+        public UsersController(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
     }
 }

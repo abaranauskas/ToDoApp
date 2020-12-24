@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ToDoApp.Domain
+namespace TasksManagementApp.Domain
 {
     public abstract class Entity
     {

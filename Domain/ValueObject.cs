@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ToDoApp.Domain
+namespace TasksManagementApp.Domain
 {
     public abstract class ValueObject
     {
@@ -30,7 +28,7 @@ namespace ToDoApp.Domain
                 {
                     unchecked
                     {
-                        return (current * 23) + (obj?.GetHashCode() ?? 0);
+                        return current * 23 + (obj?.GetHashCode() ?? 0);
                     }
                 });
         }

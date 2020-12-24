@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using TasksManagementApp.Domain.TaskItems;
 
-namespace ToDoApp.Domain.Users
+namespace TasksManagementApp.Domain.Users
 {
     public class User : Entity
     {
-        private readonly List<Task> _tasks = new List<Task>();
+        private readonly List<TaskItem> _tasks = new List<TaskItem>();
 
         protected User()
         {
@@ -24,9 +24,9 @@ namespace ToDoApp.Domain.Users
         public Role Role { get; }
         public string Name { get; }
         public string PasswordHash { get; }
-        public IReadOnlyList<Task> Tasks => _tasks.ToList();
+        public IReadOnlyList<TaskItem> Tasks => _tasks.ToList();
 
-        public User Create(Email email, Role role, string name, string passwordHash)
+        public static User Create(Email email, Role role, string name, string passwordHash)
         {
             //TODO: validation
 
