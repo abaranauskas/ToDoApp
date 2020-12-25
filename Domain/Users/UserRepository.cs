@@ -17,5 +17,10 @@ namespace TasksManagementApp.Domain.Users
         {
             return await _context.Users.SingleOrDefaultAsync(x => x.Email == (Email)email);
         }
+
+        public async Task<User> GetById(int userId)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 using TasksManagementApp.Domain.Users;
 using TasksManagementApp.Users.Dto;
@@ -41,6 +42,8 @@ namespace TasksManagementApp.Users
         [HttpGet("action")]
         public IActionResult Action()
         {
+            var userId = int.Parse(User.Claims.Single(x => x.Type == "userId").Value);
+
             return Ok(new { Message = "Works well" });
         }
     }

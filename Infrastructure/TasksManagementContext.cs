@@ -32,7 +32,7 @@ namespace TasksManagementApp.Infrastructure
                     Id = 1,
                     Email = Email.Create("baranauskas.aidas@gmail.com").Value,
                     Role = Role.Admin,
-                    Name = "Aidas",
+                    Name = "Baranauskas Aidas",
                     PasswordHash = passwordUser1.Hash,
                     PasswordSalt = passwordUser1.Salt
                 },
@@ -41,6 +41,7 @@ namespace TasksManagementApp.Infrastructure
                     Id = 2,
                     Email = Email.Create("aidas.baranauskas@yahoo.com").Value,
                     Role = Role.User,
+                    Name = "Aidas Baranauskas",
                     PasswordHash = passwordUser2.Hash,
                     PasswordSalt = passwordUser2.Salt
                 });
@@ -66,6 +67,9 @@ namespace TasksManagementApp.Infrastructure
                     .HasConversion(p => p.Value, p => Email.Create(p).Value)
                     .HasMaxLength(50)
                     .IsRequired();
+                x.Property(p => p.Name)
+                   .HasMaxLength(50)
+                   .IsRequired();
                 x.Property(p => p.Role)
                     .HasConversion(p => p.Value, p => (Role)p)
                     .HasMaxLength(10)
