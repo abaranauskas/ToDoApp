@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TasksManagementApp.Domain.TaskItems;
 using TasksManagementApp.Domain.Users;
+using TasksManagementApp.Utils;
 
 namespace TasksManagementApp.Infrastructure
 {
@@ -22,6 +23,9 @@ namespace TasksManagementApp.Infrastructure
 
         private void SeedData(ModelBuilder modelBuilder)
         {
+            var passwordUser1 = PasswordHash.CreatePasswordHash("123456789012").Value;
+            var passwordUser2 = PasswordHash.CreatePasswordHash("210987654321").Value;
+
             modelBuilder.Entity<User>().HasData(
                 new
                 {
@@ -29,16 +33,17 @@ namespace TasksManagementApp.Infrastructure
                     Email = Email.Create("baranauskas.aidas@gmail.com").Value,
                     Role = Role.Admin,
                     Name = "Aidas",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456789012")
+                    PasswordHash = passwordUser1.Hash,
+                    PasswordSalt = passwordUser1.Salt
                 },
                 new
                 {
                     Id = 2,
                     Email = Email.Create("aidas.baranauskas@yahoo.com").Value,
                     Role = Role.User,
-                    Name = "Aidas Baranauskas",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("210987654321")
-                }); ;
+                    PasswordHash = passwordUser2.Hash,
+                    PasswordSalt = passwordUser2.Salt
+                });
 
             modelBuilder.Entity<TaskItem>().HasData(
                 new { Id = 1, Name = "Manage team tasks", IsCompleted = false, UserId = 1 },
@@ -66,8 +71,13 @@ namespace TasksManagementApp.Infrastructure
                     .HasMaxLength(10)
                     .IsRequired();
                 x.Property(p => p.PasswordHash)
-                    .HasMaxLength(128)
+                    .HasMaxLength(88)
+                    .IsFixedLength()
                     .IsRequired();
+                x.Property(p => p.PasswordSalt)
+                   .HasMaxLength(172)
+                   .IsFixedLength()
+                   .IsRequired();
                 x.HasMany(p => p.Tasks)
                     .WithOne(p => p.User)
                     .OnDelete(DeleteBehavior.Cascade);

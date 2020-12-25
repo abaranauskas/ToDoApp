@@ -42,5 +42,10 @@ namespace TasksManagementApp.Domain.Users
         {
             return email.Value;
         }
+
+        public static explicit operator Email(string email)
+        {
+            return new Email(email);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using TasksManagementApp.Infrastructure;
 
 namespace TasksManagementApp.Domain.Users
@@ -10,6 +11,11 @@ namespace TasksManagementApp.Domain.Users
         public UserRepository(TasksManagementContext context)
         {
             _context = context;
+        }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            return await _context.Users.SingleOrDefaultAsync(x => x.Email == (Email)email);
         }
     }
 }
