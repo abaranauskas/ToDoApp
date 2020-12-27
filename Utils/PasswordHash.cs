@@ -6,10 +6,13 @@ namespace TasksManagementApp.Utils
 {
     public static partial class PasswordHash
     {
-        public static Result<Password> CreatePasswordHash(string password)
+        public static Result<Password> CreatePasswordHash(string password, string confirmPassword)
         {
             if (password.Length < 12)
                 return Result.Failure<Password>("Password must be at least 12 characters");
+
+            if (password != confirmPassword)
+                return Result.Failure<Password>("Password and confirm password values does not match");
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {

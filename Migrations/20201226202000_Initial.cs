@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using MySql.Data.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TasksManagementApp.Migrations
 {
@@ -12,10 +13,14 @@ namespace TasksManagementApp.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Email = table.Column<string>(maxLength: 50, nullable: false),
                     Role = table.Column<string>(maxLength: 10, nullable: false),
-                    PasswordHash = table.Column<string>(maxLength: 128, nullable: false)
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    PasswordHash = table.Column<string>(fixedLength: true, maxLength: 88, nullable: false),
+                    PasswordSalt = table.Column<string>(fixedLength: true, maxLength: 172, nullable: false),
+                    ResetPasswordToken = table.Column<Guid>(nullable: false, defaultValue: new Guid("00000000-0000-0000-0000-000000000000")),
+                    ResetPasswordTokenExpires = table.Column<DateTimeOffset>(nullable: false, defaultValue: new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)))
                 },
                 constraints: table =>
                 {
@@ -27,7 +32,7 @@ namespace TasksManagementApp.Migrations
                 columns: table => new
                 {
                     TaskId = table.Column<int>(nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     IsCompleted = table.Column<bool>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
@@ -45,13 +50,13 @@ namespace TasksManagementApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "Email", "PasswordHash", "Role" },
-                values: new object[] { 1, "baranauskas.aidas@gmail.com", "$2a$11$CzcOaxOxuZHcMO9tT5yueua9NZKe84.cNdUarlxq0LBh83B5Bb0zq", "admin" });
+                columns: new[] { "UserId", "Email", "Name", "PasswordHash", "PasswordSalt", "Role" },
+                values: new object[] { 1, "baranauskas.aidas@gmail.com", "Baranauskas Aidas", "gLWp0wheQxpUGPaskVRzPZNxOCKrrtyCUhCAc6NXMDoAq/Ue5R3xLBlcndd0KljfixuYOX44alAlgG0gesx6QQ==", "Pg8hoAZPebOtXFJZmabdIaAlNpOrPBodPRiM12pDarEixuC062HqQ06nSJEuYKashnD5vGeoxzuhIJvHsSIJjCJ5FpydgYEiW209QvziQvhVykve6efUJZPg/uzHm+HKqdxOxIE2iIlJMLzcTbJxrMO0pOc+rrzvsvlJYXCklpQ=", "admin" });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "Email", "PasswordHash", "Role" },
-                values: new object[] { 2, "aidas.baranauskas@yahoo.com", "$2a$11$BhOFCvC6eHYPc9CSlUehmODG4WhPJTjVxqXJ/iAS3WYwkYZIilSNy", "user" });
+                columns: new[] { "UserId", "Email", "Name", "PasswordHash", "PasswordSalt", "Role" },
+                values: new object[] { 2, "aidas.baranauskas@yahoo.com", "Aidas Baranauskas", "jSMhlXJhO4uOGhb6jftBnyIgn9FhF8dKR0OC4BjqLt7rshEhSebGHsENXsqwYmD5F7aHvX6h94f1iVlB8B5lhA==", "tqpH4P1AMVug1AVm+2ZFaLcSuJ1Hvj+7udjq6KDEMvC5Rpd/2d0fYi2fIuBZTNSS+mUFWuldsDH04U31HB+WqWQpIr0Fv8xNk9ecYR66RtiMBA9zL7deLOfAOWTpEN1VHu4kijABDdYt9M0iUkoFFfapSEcTmDSUwo6HR2ZadJA=", "user" });
 
             migrationBuilder.InsertData(
                 table: "Tasks",

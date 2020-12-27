@@ -9,9 +9,9 @@ namespace TasksManagementApp.Utils
 {
     public class TokenGenerator
     {
-        private readonly AppSettings _appSettings;
+        private readonly SecurityConfiguration _appSettings;
 
-        public TokenGenerator(IOptions<AppSettings> appSettings)
+        public TokenGenerator(IOptions<SecurityConfiguration> appSettings)
         {
             _appSettings = appSettings.Value;
         }

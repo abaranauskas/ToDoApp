@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TasksManagementApp.Domain.TaskItems;
 using TasksManagementApp.Domain.Users;
 using TasksManagementApp.Utils;
@@ -23,8 +24,8 @@ namespace TasksManagementApp.Infrastructure
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            var passwordUser1 = PasswordHash.CreatePasswordHash("123456789012").Value;
-            var passwordUser2 = PasswordHash.CreatePasswordHash("210987654321").Value;
+            var passwordUser1 = PasswordHash.CreatePasswordHash("123456789012", "123456789012").Value;
+            var passwordUser2 = PasswordHash.CreatePasswordHash("210987654321", "210987654321").Value;
 
             modelBuilder.Entity<User>().HasData(
                 new
@@ -82,6 +83,12 @@ namespace TasksManagementApp.Infrastructure
                    .HasMaxLength(172)
                    .IsFixedLength()
                    .IsRequired();
+                x.Property(p => p.ResetPasswordToken)
+                  .HasDefaultValue(Guid.Empty)
+                  .IsRequired();
+                x.Property(p => p.ResetPasswordTokenExpires)
+                  .HasDefaultValue(DateTimeOffset.MinValue)
+                  .IsRequired();
                 x.HasMany(p => p.Tasks)
                     .WithOne(p => p.User)
                     .OnDelete(DeleteBehavior.Cascade);

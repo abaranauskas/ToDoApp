@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TasksManagementApp.Infrastructure;
+using TasksManagementApp.Infrastructure.EmailService;
 using TasksManagementApp.Utils;
 
 namespace TasksManagementApp
@@ -33,7 +34,7 @@ namespace TasksManagementApp
 
             services.AddControllers();
             services.AddDbContext<TasksManagementContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddAuthentication(x =>
             {
@@ -47,7 +48,8 @@ namespace TasksManagementApp
                  x.TokenValidationParameters = new TokenValidationParameters
                  {
                      ValidateIssuerSigningKey = true,
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Secret").Value)),
+                     IssuerSigningKey = new SymmetricSecurityKey(
+                         Encoding.ASCII.GetBytes(Configuration.GetSection("SecurityConfiguration:Secret").Value)),
                      ValidateIssuer = false,
                      ValidateAudience = false
                  };
@@ -55,7 +57,12 @@ namespace TasksManagementApp
 
             services.AddScoped<UnitOfWork>();            
             services.AddScoped<TokenGenerator>();
-            services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
+            services.AddScoped<EmailSender>();
+            services.Configure<SecurityConfiguration>(Configuration.GetSection(nameof(SecurityConfiguration)));
+            services.Configure<SmtpConfiguration>(Configuration.GetSection(nameof(SmtpConfiguration)));
+
+            var a = Configuration.GetSection(nameof(SmtpConfiguration)).Value;
+            var e = Configuration.GetSection(nameof(SecurityConfiguration));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

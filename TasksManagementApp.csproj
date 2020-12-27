@@ -1,22 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>	
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aa353747-19ab-406e-aeb4-e8428c6c1d08</UserSecretsId>	
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20201225024915_AddPasswordSalt.cs" />
-    <Compile Remove="Migrations\20201225024915_AddPasswordSalt.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.13.3" />
+    <PackageReference Include="MailKit" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
+    <PackageReference Include="MimeKit" Version="2.10.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
