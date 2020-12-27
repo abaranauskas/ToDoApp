@@ -75,13 +75,9 @@ namespace TasksManagementApp.Infrastructure
                     .HasConversion(p => p.Value, p => (Role)p)
                     .HasMaxLength(10)
                     .IsRequired();
-                x.Property(p => p.PasswordHash)
-                    .HasMaxLength(88)
-                    .IsFixedLength()
+                x.Property(p => p.PasswordHash)                   
                     .IsRequired();
-                x.Property(p => p.PasswordSalt)
-                   .HasMaxLength(172)
-                   .IsFixedLength()
+                x.Property(p => p.PasswordSalt)                 
                    .IsRequired();
                 x.Property(p => p.ResetPasswordToken)
                   .HasDefaultValue(Guid.Empty)

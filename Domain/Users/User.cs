@@ -14,7 +14,7 @@ namespace TasksManagementApp.Domain.Users
         {
         }
 
-        private User(Email email, Role role, string name, string passwordHash, string passwordSalt)
+        private User(Email email, Role role, string name, byte[] passwordHash, byte[] passwordSalt)
         {
             Email = email;
             Role = role;
@@ -26,13 +26,13 @@ namespace TasksManagementApp.Domain.Users
         public Email Email { get; }
         public Role Role { get; }
         public string Name { get; }
-        public string PasswordHash { get; private set; }
-        public string PasswordSalt { get; private set; }
+        public byte[] PasswordHash { get; private set; }
+        public byte[] PasswordSalt { get; private set; }
         public Guid ResetPasswordToken { get; private set; }
         public DateTimeOffset ResetPasswordTokenExpires { get; private set; }
         public IReadOnlyList<TaskItem> Tasks => _tasks.ToList();
 
-        public static User Create(Email email, Role role, string name, string passwordHash, string passwordSalt)
+        public static User Create(Email email, Role role, string name, byte[] passwordHash, byte[] passwordSalt)
         {
             //TODO: validation
 
@@ -53,7 +53,7 @@ namespace TasksManagementApp.Domain.Users
             return Result.Failure("Token is invalid.");
         }
 
-        public void SetNewPassword(string hash, string salt, Guid token)
+        public void SetNewPassword(byte[] hash, byte[] salt, Guid token)
         {
             if (CanResetPassword(token).IsFailure)
                 throw new InvalidOperationException();

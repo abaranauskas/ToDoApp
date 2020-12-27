@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TasksManagementApp.Infrastructure;
 
 namespace TasksManagementApp.Migrations
 {
     [DbContext(typeof(TasksManagementContext))]
-    partial class TasksManagementContextModelSnapshot : ModelSnapshot
+    [Migration("20201227205645_ChangePasswordHashAndSaltTypes")]
+    partial class ChangePasswordHashAndSaltTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

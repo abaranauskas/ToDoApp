@@ -16,23 +16,22 @@ namespace TasksManagementApp.Utils
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                var passwordSalt = Convert.ToBase64String(hmac.Key);
-                var passwordHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+                var passwordSalt = hmac.Key;
+                var passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
 
                 return Result.Success(new Password(passwordHash, passwordSalt));
             }
 
         }
 
-        public static bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt)
+        public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(Convert.FromBase64String(passwordSalt)))
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                var hashInBytes = Convert.FromBase64String(passwordHash);
                 for (int i = 0; i < computedHash.Length; i++)
                 {
-                    if (computedHash[i] != hashInBytes[i])
+                    if (computedHash[i] != passwordHash[i])
                     {
                         return false;
                     }
@@ -43,14 +42,14 @@ namespace TasksManagementApp.Utils
 
         public class Password
         {
-            public Password(string hash, string salt)
+            public Password(byte[] hash, byte[] salt)
             {
                 Hash = hash;
                 Salt = salt;
             }
 
-            public string Hash { get; }
-            public string Salt { get; }
+            public byte[] Hash { get; }
+            public byte[] Salt { get; }
         }
     }
 }
