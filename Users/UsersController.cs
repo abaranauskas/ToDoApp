@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using TasksManagementApp.Common;
@@ -10,10 +11,8 @@ using TasksManagementApp.Users.Dto;
 using TasksManagementApp.Utils;
 
 namespace TasksManagementApp.Users
-{
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+{   
+    public class UsersController : BaseController
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly TokenGenerator _tokenGenerator;
@@ -28,6 +27,8 @@ namespace TasksManagementApp.Users
 
         [AllowAnonymous]
         [HttpPost("[action]")]
+        [ProducesResponseType(typeof(AuthenticateResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
             var user = await _unitOfWork.UserRepository.GetByEmail(model.Email);
@@ -45,6 +46,8 @@ namespace TasksManagementApp.Users
 
         [AllowAnonymous]
         [HttpPost("[action]")]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgotPasswordRequest model)
         {
             var emailOrError = Email.Create(model.Email);
@@ -55,7 +58,7 @@ namespace TasksManagementApp.Users
             var user = await _unitOfWork.UserRepository.GetByEmail(emailOrError.Value);
 
             if (user is null)
-                return Ok("Check your email to reset password");
+                return Ok("Please check your email for password reset instructions") ;
 
             user.SetPasswordResetToken();
             var passwordResetUrl = GeneratePasswordResetUrl(user);
@@ -70,6 +73,8 @@ namespace TasksManagementApp.Users
 
         [AllowAnonymous]
         [HttpPost("{id}/[action]/{token}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ResetPassword(int id, Guid token, [FromBody] ResetPasswordRequest model)
         {
             var paswordOrError = PasswordHash.CreatePasswordHash(model.Password, model.ConfirmPassword);

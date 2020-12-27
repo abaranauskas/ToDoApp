@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using TasksManagementApp.Infrastructure;
 using TasksManagementApp.Infrastructure.EmailService;
@@ -25,16 +25,31 @@ namespace TasksManagementApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthorization(options =>
-            {
-                options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-            });
-
             services.AddControllers();
+
             services.AddDbContext<TasksManagementContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Tasks management app API",
+                    Description = "Tasks management app API"
+                });
+
+                swagger.OperationFilter<AddAuthHeaderOperationFilter>();
+                swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                });
+            });
 
             services.AddAuthentication(x =>
             {
@@ -55,14 +70,11 @@ namespace TasksManagementApp
                  };
              });
 
-            services.AddScoped<UnitOfWork>();            
+            services.AddScoped<UnitOfWork>();
             services.AddScoped<TokenGenerator>();
             services.AddScoped<EmailSender>();
             services.Configure<SecurityConfiguration>(Configuration.GetSection(nameof(SecurityConfiguration)));
             services.Configure<SmtpConfiguration>(Configuration.GetSection(nameof(SmtpConfiguration)));
-
-            var a = Configuration.GetSection(nameof(SmtpConfiguration)).Value;
-            var e = Configuration.GetSection(nameof(SecurityConfiguration));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -79,6 +91,9 @@ namespace TasksManagementApp
             }
 
             app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "Task management app API"));
 
             app.UseAuthentication();
             app.UseAuthorization();

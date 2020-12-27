@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TasksManagementApp.Common;
@@ -9,11 +11,10 @@ using TasksManagementApp.Domain.Users;
 using TasksManagementApp.Tasks.Dto;
 using TasksManagementApp.Utils;
 
-namespace ToDoApp.Tasks
+namespace TasksManagementApp.Tasks
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class TasksController : ControllerBase
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    public class TasksController : BaseController
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -23,6 +24,7 @@ namespace ToDoApp.Tasks
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<TaskForUserResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> ListForUser()
         {
             var userId = int.Parse(User.Claims.Single(x => x.Type == "userId").Value);
@@ -34,6 +36,8 @@ namespace ToDoApp.Tasks
 
         [Authorize(Roles = "admin")]
         [HttpGet("All")]
+        [ProducesResponseType(typeof(IEnumerable<TaskForAdminResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> ListAll()
         {
             var tasks = await _unitOfWork.TaskItemRespository.GetAll();
@@ -43,6 +47,8 @@ namespace ToDoApp.Tasks
         }
 
         [HttpPost]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CreateTask([FromBody] NewTaskRequest model)
         {
             var userId = int.Parse(User.Claims.Single(x => x.Type == "userId").Value);
@@ -59,6 +65,8 @@ namespace ToDoApp.Tasks
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateTask(int id, [FromBody] UpdateTaskRequest model)
         {
             var userId = int.Parse(User.Claims.Single(x => x.Type == "userId").Value);
@@ -78,6 +86,8 @@ namespace ToDoApp.Tasks
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteTask(int id)
         {
             var userId = int.Parse(User.Claims.Single(x => x.Type == "userId").Value);
@@ -95,7 +105,7 @@ namespace ToDoApp.Tasks
 
             await _unitOfWork.DeleteAndSave(task);
 
-            return Ok();
+            return NoContent();
         }
     }
 }
