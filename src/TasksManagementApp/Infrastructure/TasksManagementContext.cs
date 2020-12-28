@@ -24,8 +24,9 @@ namespace TasksManagementApp.Infrastructure
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            var passwordUser1 = PasswordHash.CreatePasswordHash("123456789012", "123456789012").Value;
-            var passwordUser2 = PasswordHash.CreatePasswordHash("210987654321", "210987654321").Value;
+            var passwordUser1 = PasswordHash.CreatePasswordHash("baranauskas.aidas@gmail.com", "baranauskas.aidas@gmail.com").Value;
+            var passwordUser2 = PasswordHash.CreatePasswordHash("aidas.baranauskas@yahoo.com", "aidas.baranauskas@yahoo.com").Value;
+            var passwordUser3 = PasswordHash.CreatePasswordHash("user@taskmanagementapp.com", "user@taskmanagementapp.com").Value;
 
             modelBuilder.Entity<User>().HasData(
                 new
@@ -45,6 +46,14 @@ namespace TasksManagementApp.Infrastructure
                     Name = "Aidas Baranauskas",
                     PasswordHash = passwordUser2.Hash,
                     PasswordSalt = passwordUser2.Salt
+                }, new
+                {
+                    Id = 3,
+                    Email = Email.Create("user@taskmanagementapp.com").Value,
+                    Role = Role.User,
+                    Name = "Simple User",
+                    PasswordHash = passwordUser3.Hash,
+                    PasswordSalt = passwordUser3.Salt
                 });
 
             modelBuilder.Entity<TaskItem>().HasData(
@@ -52,7 +61,8 @@ namespace TasksManagementApp.Infrastructure
                 new { Id = 2, Name = "Track progress", IsCompleted = true, UserId = 1 },
                 new { Id = 3, Name = "Buy product", IsCompleted = false, UserId = 2 },
                 new { Id = 4, Name = "Sell product", IsCompleted = false, UserId = 2 },
-                new { Id = 5, Name = "Manage transportation", IsCompleted = false, UserId = 2 });
+                new { Id = 5, Name = "Manage transportation", IsCompleted = false, UserId = 2 },
+                new { Id = 6, Name = "Fix code defect", IsCompleted = false, UserId = 3 });
         }
 
         private void SetUpTables(ModelBuilder modelBuilder)
