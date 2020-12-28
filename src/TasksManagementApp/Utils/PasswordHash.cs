@@ -1,10 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
-using System;
 using System.Text;
 
 namespace TasksManagementApp.Utils
 {
-    public static partial class PasswordHash
+    public static class PasswordHash
     {
         public static Result<Password> CreatePasswordHash(string password, string confirmPassword)
         {
@@ -12,7 +11,7 @@ namespace TasksManagementApp.Utils
                 return Result.Failure<Password>("Password must be at least 12 characters");
 
             if (password != confirmPassword)
-                return Result.Failure<Password>("Password and confirm password values does not match");
+                return Result.Failure<Password>("Password and confirm password values do not match");
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {

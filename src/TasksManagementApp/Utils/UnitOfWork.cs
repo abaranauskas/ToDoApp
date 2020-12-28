@@ -10,7 +10,7 @@ namespace TasksManagementApp.Utils
     {
         private readonly TasksManagementContext _context;
         private UserRepository _userRepository;
-        private TaskItemRespository _taskItemRepository;
+        private TaskItemRepository _taskItemRepository;
 
         public UnitOfWork(TasksManagementContext context)
         {
@@ -20,8 +20,8 @@ namespace TasksManagementApp.Utils
         public UserRepository UserRepository => 
             _userRepository = _userRepository ?? new UserRepository(_context);
 
-        public TaskItemRespository TaskItemRespository => 
-            _taskItemRepository = _taskItemRepository ?? new TaskItemRespository(_context);
+        public TaskItemRepository TaskItemRespository => 
+            _taskItemRepository = _taskItemRepository ?? new TaskItemRepository(_context);
 
         public async Task Commit()
         {

@@ -32,9 +32,10 @@ namespace TasksManagementApp.Domain.Users
         public DateTimeOffset ResetPasswordTokenExpires { get; private set; }
         public IReadOnlyList<TaskItem> Tasks => _tasks.ToList();
 
-        public static User Create(Email email, Role role, string name, byte[] passwordHash, byte[] passwordSalt)
+        public static Result<User> Create(Email email, Role role, string name, byte[] passwordHash, byte[] passwordSalt)
         {
-            //TODO: validation
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure<User>("Name should not be empty");
 
             return new User(email, role, name, passwordHash, passwordSalt);
         }

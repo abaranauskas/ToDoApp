@@ -6,11 +6,11 @@ using TasksManagementApp.Infrastructure;
 
 namespace TasksManagementApp.Domain.TaskItems
 {
-    public class TaskItemRespository
+    public class TaskItemRepository
     {
         private readonly TasksManagementContext _context;
 
-        public TaskItemRespository(TasksManagementContext context)
+        public TaskItemRepository(TasksManagementContext context)
         {
             _context = context;
         }
